@@ -74,9 +74,17 @@ def _require_nonzero_divisor(op_name: str) -> Callable[[Decimal, Decimal], None]
 def _validate_root(a: Decimal, b: Decimal) -> None:
     if b == 0:
         raise ValidationError("root: n=0 is not allowed.")
-    # If a is negative and b is even integer => invalid in reals
-    if a < 0 and b == int(b) and int(b) % 2 == 0:
-        raise ValidationError("root: even root of a negative number is not allowed.")
+
+    # If a is negative:
+    # - allow odd integer roots (real result)
+    # - disallow even integer roots (no real result)
+    # - disallow non-integer roots (would become complex in float fallback)
+    if a < 0:
+        if b == int(b):
+            if int(b) % 2 == 0:
+                raise ValidationError("root: even root of a negative number is not allowed.")
+        else:
+            raise ValidationError("root: non-integer root of a negative number is not allowed.")
 
 
 # -------------------------
@@ -100,8 +108,16 @@ def _power(a: Decimal, b: Decimal) -> Decimal:
 
 
 def _root(a: Decimal, b: Decimal) -> Decimal:
-    # nth root: a ** (1/b)
-    return Decimal(str(float(a) ** (1.0 / float(b))))
+    """nth root: a ** (1/b)
+
+    - For positive a: float fallback is fine for this assignment.
+    - For negative a with odd integer b: return the negative real root.
+    - Other negative cases are rejected by _validate_root.
+    """
+    fb = float(b)
+    if a < 0 and b == int(b) and int(b) % 2 == 1:
+        return Decimal(str(- (abs(float(a)) ** (1.0 / fb))))
+    return Decimal(str(float(a) ** (1.0 / fb)))
 
 
 def _int_divide(a: Decimal, b: Decimal) -> Decimal:

@@ -17,6 +17,10 @@ def parse_two_numbers(a: str, b: str, *, max_value: int) -> Tuple[Decimal, Decim
     except (InvalidOperation, ValueError):
         raise ValidationError("Inputs must be valid numbers.")
 
+    # Reject NaN / Infinity explicitly
+    if not da.is_finite() or not db.is_finite():
+        raise ValidationError("Inputs must be finite numbers (no NaN/Infinity).")
+
     if abs(da) > max_value or abs(db) > max_value:
         raise ValidationError(f"Inputs must be within ±{max_value}.")
 
