@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal,getcontext, ROUND_HALF_UP
 from typing import List, Optional
 
 import pandas as pd
@@ -92,7 +92,8 @@ class Calculator:
         self._push_undo_state()
         self._redo_stack.clear()
 
-        result = op.run(a, b)
+        result = op(a, b)
+        
         result = self._apply_precision(result)
 
         calc = Calculation(
@@ -116,11 +117,14 @@ class Calculator:
         """
         Round to configured decimal places (CALCULATOR_PRECISION).
         """
+        if not value.is_finite():
+            raise OperationError("Result is not a finite number (NaN or Infinity).")
         places = self.config.precision
         if places <= 0:
             return value.to_integral_value(rounding=ROUND_HALF_UP)
         quant = Decimal("1." + ("0" * places))
-        return value.quantize(quant, rounding=ROUND_HALF_UP)
+        getcontext().prec = 50;
+        return value.quantize(quant)
 
     # -------------------- Persistence (pandas) --------------------
 

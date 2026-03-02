@@ -29,7 +29,7 @@ def format_calc_line(i: int, op: str, a: str, b: str, result: str, ts: str) -> s
     return f"{i:>3}. {op}({a}, {b}) = {result} @ {ts}"
 
 
-def run_repl() -> None:
+def calculator_repl() -> None:
     config = CalculatorConfig.load()
     calc = Calculator(config=config)
 
@@ -52,7 +52,7 @@ def run_repl() -> None:
                 print(HELP_TEXT)
                 continue
 
-            if cmd == "exit":
+            if cmd in {"exit", "q", "quit"}:
                 print("Goodbye!")
                 break
 
@@ -96,7 +96,7 @@ def run_repl() -> None:
 
             # Otherwise: arithmetic operation must be cmd + 2 numbers
             if len(parts) != 3:
-                raise ValidationError("Operation requires exactly two inputs: <command> <a> <b>")
+                raise ValidationError("Operation requires exactly three inputs: <command> <a> <b>")
 
             a, b = parse_two_numbers(parts[1], parts[2], max_value=calc.config.max_input_value)
             result = calc.calculate(cmd, a, b)

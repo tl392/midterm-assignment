@@ -30,7 +30,7 @@ class Operation(ABC):
         self.validate_operands(a, b)
         try:
             return self.execute(a, b)
-        except OperationError:
+        except (ValidationError, OperationError):
             raise
         except (InvalidOperation, OverflowError, ValueError, ZeroDivisionError) as e:
             # Convert low-level arithmetic errors into a domain error
