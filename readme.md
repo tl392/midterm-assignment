@@ -40,9 +40,44 @@ but also to showcase real-world software engineering standards.
 
 The application follows a modular architecture:
 
-app/ - calculator.py - operations.py - calculator_memento.py -
-history.py - calculator_config.py - exceptions.py -
-input_validators.py - calculator_repl.py
+project_root/
+│
+├── .github/
+│   └── workflows/                 # CI/CD configuration (GitHub Actions)
+│
+├── app/                           # Main application package
+│   ├── __init__.py
+│   ├── calculation.py             # Calculation data model
+│   ├── calculator.py              # Core calculator logic
+│   ├── calculator_config.py       # Environment configuration loader
+│   ├── calculator_memento.py      # Memento pattern (undo/redo)
+│   ├── calculator_repl.py         # REPL interface (CLI)
+│   ├── exceptions.py              # Custom exception classes
+│   ├── history.py                 # Observer pattern implementation
+│   ├── input_validators.py        # Input validation utilities
+│   ├── logger.py                  # Logging configuration
+│   └── operations.py              # Factory pattern & operations
+│
+├── tests/                         # Unit tests (pytest)
+│   ├── __init__.py
+│   ├── test_calculation_model.py
+│   ├── test_calculator_config.py
+│   ├── test_calculator_positive.py
+│   ├── test_calculator_negative.py
+│   ├── test_calculator_repl.py
+│   ├── test_config.py
+│   ├── test_input_validators.py
+│   ├── test_logger_and_observers.py
+│   ├── test_memento.py
+│   └── test_operations_factory.py
+│
+├── .env                           # Environment variables
+├── .gitignore
+├── pytest.ini                     # Pytest configuration
+├── main.py                        # Entry point (optional)
+├── requirements.txt               # Project dependencies
+├── LICENSE
+└── README.md
 
 Each module has a single responsibility, ensuring maintainability and
 scalability.
