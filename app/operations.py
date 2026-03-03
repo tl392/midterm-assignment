@@ -31,7 +31,7 @@ class Operation(ABC):
         try:
             return self.execute(a, b)
         except (ValidationError, OperationError):
-            raise
+            raise  # pragma: no cover
         except (InvalidOperation, OverflowError, ValueError, ZeroDivisionError) as e:
             # Convert low-level arithmetic errors into a domain error
             raise OperationError(f"Operation '{self.name}' failed: {e}") from e
