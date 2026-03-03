@@ -39,7 +39,7 @@ but also to showcase real-world software engineering standards.
 # Architecture
 
 The application follows a modular architecture:
-
+```
 project_root/
 │
 ├── .github/
@@ -78,7 +78,7 @@ project_root/
 ├── requirements.txt               # Project dependencies
 ├── LICENSE
 └── README.md
-
+```
 Each module has a single responsibility, ensuring maintainability and
 scalability.
 
